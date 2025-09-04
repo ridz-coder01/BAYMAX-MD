@@ -1,13 +1,16 @@
 const simpleGit = require('simple-git');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
+// Load deployer config
+const config = require('./config');
+
 // ================= CONFIG =================
-const REPO_URL = 'https://github.com/ridz-coder/BAYMAX-MD.git'; // Public repo URL
-const LOCAL_DIR = path.join(__dirname, 'BAYMAX-MD'); // Local folder
-const BRANCH = 'main'; // Branch to clone/pull
-const AUTO_RESTART = true; // Restart app on updates
+const REPO_URL = 'https://github.com/ridz-coder/BAYMAX-MD.git'; // Public repo
+const LOCAL_DIR = path.join(__dirname, 'BAYMAX-MD');   // Local folder
+const BRANCH = 'main';                                   // Branch to clone
+const AUTO_RESTART = true;                               // Restart on updates
 // =========================================
 
 const git = simpleGit();
@@ -31,41 +34,48 @@ async function deploy() {
 
   if (fs.existsSync(packageJsonPath)) {
     console.log('Installing dependencies...');
-    exec('npm install', { cwd: LOCAL_DIR }, (err, stdout, stderr) => {
-      if (err) console.error('npm install error:', err);
-      else console.log(stdout);
-      console.log('Dependencies installed.');
+    const install = spawn('npm', ['install'], { cwd: LOCAL_DIR, stdio: 'inherit' });
 
-      // Detect start command
+    install.on('close', () => {
+      console.log('Dependencies installed.');
       const pkg = require(packageJsonPath);
       if (pkg.scripts && pkg.scripts.start) {
         startCommand = 'npm start';
         console.log('Detected start script from package.json.');
       }
-
-      runApp(startCommand);
+      runBot(startCommand);
     });
   } else {
     console.log('No package.json found, using default start command.');
-    runApp(startCommand);
+    runBot(startCommand);
   }
 }
 
-// Function to run and optionally auto-restart the app
-let appProcess = null;
-function runApp(command) {
-  if (appProcess) appProcess.kill();
+// Function to run the bot with deployer config
+let botProcess = null;
+function runBot(command) {
+  if (botProcess) botProcess.kill();
 
-  console.log(`Starting app: ${command}`);
-  appProcess = exec(command, { cwd: LOCAL_DIR });
+  console.log(`Starting bot: ${command}`);
 
-  appProcess.stdout.on('data', (data) => process.stdout.write(data));
-  appProcess.stderr.on('data', (data) => process.stderr.write(data));
-  appProcess.on('close', (code) => {
-    console.log(`App exited with code ${code}`);
+  // Inject deployer config as environment variables
+  const env = {
+    ...process.env,
+    SESSION_ID: config.SESSION_ID,
+    PREFIX: config.PREFIX,
+  };
+
+  botProcess = spawn(command.split(' ')[0], command.split(' ').slice(1), {
+    cwd: LOCAL_DIR,
+    stdio: 'inherit',
+    env,
+  });
+
+  botProcess.on('close', (code) => {
+    console.log(`Bot exited with code ${code}`);
     if (AUTO_RESTART) {
-      console.log('Restarting app...');
-      runApp(command);
+      console.log('Restarting bot...');
+      runBot(command);
     }
   });
 }
