@@ -1,0 +1,71 @@
+{
+  "name": "BAYMAX-MD",
+  "version": "1.0.0",
+  "description": "BAYMAX-MD, a Multi Device Whatsapp Bot to Enhance Whatsapp Communication Experience",
+  "main": "./index.js",
+  "type": "commonjs",
+  "--engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "pm2 start index.js --deep-monitoring --attach --name BAYMAX-MD",
+    "stop": "pm2 stop BAYMAX-MD",
+    "restart": "pm2 restart BAYMAX-MD"
+  },
+  "keywords": [
+    "BAYMAX-MD",
+    "BAYMAX-MD",
+    "BAYMAX-XMD",
+    "whatsapp-bot",
+    "BAYMAX-api"
+  ],
+  "author": "ridz-coder01",
+  "license": "MIT",
+  "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.0",
+    "adm-zip": "^0.5.16",
+    "unzipper": "^0.10.11",
+    "axios": "^1.2.5",
+    "buffer": "^6.0.3",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "cors": "latest",
+    "body-parser": "latest",
+    "jimp":"latest",
+    "translatte": "^3.0.1",
+    "express": "^4.19.2",
+    "ffmpeg": "0.0.4",
+    "file_size_url": "1.0.4",
+    "file-type": "^19.0.0",
+    "form-data": "^4.0.1",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.1.0",
+    "sharp":"0.32.6", 
+    "@whiskeysockets/baileys":"github:Drayyyxd/XD-Baileys",
+    "gifted-dls": "*",
+    "git": "0.1.5",
+    "isolated-vm": "^5.0.3",
+    "javascript-obfuscator": "^4.1.1",
+    "google-tts-api": "^2.0.2",
+    "megajs": "^1.3.3",
+    "mime-types": "^2.1.35",
+    "moment-timezone": "^0.5.45",
+    "node-fetch": "^3.3.2",
+    "path": "latest",
+    "pino": "^7.0.5",
+    "pm2": "latest",
+    "qrcode-terminal": "^0.12.0",
+    "util": "^0.12.5",
+    "wa-sticker-formatter": "^4.4.4",
+    "webcrack": "^2.14.1",
+    "yt-search": "^2.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ridz-coder01/BAYMAX-MD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ridz-coder01/BAYMAX-MD/issues"
+  },
+  "homepage": "https://github.com/ridz-coder01/BAYMAX-MD#readme"
+}
